@@ -34,8 +34,8 @@ def compute_winners_clever(race_data):
     # T < (1/2) sqrt(r^2 - 4D) + r/2
     # T > (-1/2) sqrt(r^2 - 4D) + r/2
     t_greater = math.ceil((-1/2) * math.sqrt(race_time**2 - 4 * distance) + race_time/2)
-    t_less = math.ceil((1/2) * math.sqrt(race_time**2 - 4 * distance) + race_time/2)
-    return t_less - t_greater
+    t_less = math.floor((1/2) * math.sqrt(race_time**2 - 4 * distance) + race_time/2)
+    return t_less - t_greater + 1
 
 if __name__ == "__main__":
     with open("input.txt", "r") as f:
