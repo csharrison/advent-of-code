@@ -1,6 +1,3 @@
-from collections import defaultdict
-import cProfile
-
 class RangeMap():
     def __init__(self, line):
         dest, source, range = (int(i) for i in line.split())
@@ -70,13 +67,14 @@ def process(position, maps):
         position = m.transform(position)
     return position
 
-def process_ranges(position_ranges, maps, i):
-    for position, range in position_ranges:
-        new_ranges = list(maps[i].transform_range(position, range))
-        if i == len(maps) - 1:
-            yield min(new_ranges)[0]
-        else:
-            yield from process_ranges(new_ranges, maps, i + 1)
+def process_ranges(position_ranges, maps):
+    for m in maps:
+        new_ranges = []
+        while len(position_ranges):
+            position, range = position_ranges.pop()
+            new_ranges.extend(list(m.transform_range(position, range)))
+        position_ranges = new_ranges
+    return min(position_ranges)[0]
 
 def eval(f):
     initial_seeds = [int(s) for s in f.readline().split(': ')[1].split()]
@@ -98,8 +96,8 @@ def eval(f):
 
     initial_pos = min(process(s, maps) for s in initial_seeds)
 
-    seed_ranges = zip(initial_seeds[::2], initial_seeds[1::2])
-    final_pos = min(process_ranges(seed_ranges, maps, 0))
+    seed_ranges = list(zip(initial_seeds[::2], initial_seeds[1::2]))
+    final_pos = process_ranges(seed_ranges, maps)
     return initial_pos,final_pos
 
 
