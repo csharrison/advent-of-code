@@ -3,17 +3,18 @@ from functools import reduce
 import operator
 import math
 
+def parse_nums(line):
+    return [int(i) for i in line.split(':')[1].strip().split()]
+
 def parse_file(lines):
-    parse_nums = lambda x: [int(i) for i in x.split(':')[1].strip().split()]
     times = parse_nums(lines[0])
     distance = parse_nums(lines[1])
     return zip(times, distance)
 
 def parse_file2(lines):
-    parse_nums = lambda x: int(x.split(':')[1].replace(" ", ""))
-    time = parse_nums(lines[0])
-    distance = parse_nums(lines[1])
-    return (time, distance)
+    times = parse_nums(lines[0].replace(' ', ''))
+    distance = parse_nums(lines[1].replace(' ', ''))
+    return zip(times, distance)
 
 def compute_distance(time_holding_button, race_time):
     time_not_holding_button = race_time - time_holding_button
@@ -40,6 +41,5 @@ def compute_winners_clever(race_data):
 if __name__ == "__main__":
     with open("input.txt", "r") as f:
         lines = f.readlines()
-        races = parse_file(lines)
-        print(reduce(operator.mul, (compute_winners_naive(r) for r in races)))
-        print(compute_winners_clever(parse_file2(lines)))
+        print(reduce(operator.mul, (compute_winners_naive(r) for r in parse_file(lines))))
+        print(reduce(operator.mul, (compute_winners_clever(r) for r in parse_file2(lines))))
