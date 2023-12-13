@@ -1,5 +1,6 @@
 from functools import lru_cache
 from collections import deque
+from itertools import islice
 
 def parse_line(line):
     record, runs = line.split()
